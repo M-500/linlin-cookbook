@@ -6,11 +6,11 @@ services:
     container_name: mysql-master
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: testdb
+      - MYSQL_ROOT_PASSWORD=admin@123 # root用户密码
     volumes:
-      - ./mysql-master/data:/var/lib/mysql
-      - ./mysql-master/my.cnf:/etc/mysql/my.cnf
+      - ./mysql-master/log:/var/log/mysql  # 映射日志目录，宿主机:容器
+      - ./mysql-master/data:/var/lib/mysql # 映射数据目录，宿主机:容器
+      - ./mysql-master/conf.d:/etc/mysql/conf.d # 映射配置目录，宿主机:容器
     ports:
       - "3306:3306"
 
@@ -19,14 +19,15 @@ services:
     container_name: mysql-slave
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
+      - MYSQL_ROOT_PASSWORD=admin@123 # root用户密码
     volumes:
+      - ./mysql-slave/log:/var/log/mysql
       - ./mysql-slave/data:/var/lib/mysql
-      - ./mysql-slave/my.cnf:/etc/mysql/my.cnf
+      - ./mysql-slave/conf.d:/etc/mysql/conf.d
     ports:
       - "3307:3306"
     depends_on:
-      - mysql-master
+      - mysql-master  # 等待mysql-master启动完成
 
   canal:
     image: canal/canal-server
@@ -37,4 +38,4 @@ services:
     volumes:
       - ./canal/instance.properties:/home/admin/canal-server/conf/example/instance.properties
     depends_on:
-      - mysql-master
+      - mysql-master  # 等待mysql-master启动完成
