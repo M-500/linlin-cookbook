@@ -29,13 +29,13 @@ services:
     depends_on:
       - mysql-master  # 等待mysql-master启动完成
 
-  canal:
-    image: canal/canal-server
-    container_name: canal-server
-    restart: always
-    ports:
-      - "11111:11111"
-    volumes:
-      - ./canal/instance.properties:/home/admin/canal-server/conf/example/instance.properties
-    depends_on:
-      - mysql-master  # 等待mysql-master启动完成
+#  canal:
+#    image: canal/canal-server
+#    container_name: canal-server
+#    restart: always
+#    ports:
+#      - "11111:11111"
+#    volumes:
+#      - ./canal/instance.properties:/home/admin/canal-server/conf/example/instance.properties
+#    depends_on:
+#      - mysql-master  # 等待mysql-master启动完成
