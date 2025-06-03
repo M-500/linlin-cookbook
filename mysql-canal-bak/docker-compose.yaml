@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  mysql-master:
+    image: mysql:8.0
+    container_name: mysql-master
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: testdb
+    volumes:
+      - ./mysql-master/data:/var/lib/mysql
+      - ./mysql-master/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "3306:3306"
+
+  mysql-slave:
+    image: mysql:8.0
+    container_name: mysql-slave
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - ./mysql-slave/data:/var/lib/mysql
+      - ./mysql-slave/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "3307:3306"
+    depends_on:
+      - mysql-master
+
+  canal:
+    image: canal/canal-server
+    container_name: canal-server
+    restart: always
+    ports:
+      - "11111:11111"
+    volumes:
+      - ./canal/instance.properties:/home/admin/canal-server/conf/example/instance.properties
+    depends_on:
+      - mysql-master
