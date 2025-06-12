@@ -1,0 +1,16 @@
+# filebeat 的输入
+filebeat.inputs:
+  - type: log
+    id: filebeat-logs-1
+    enabled: true
+    paths:
+      - /logs/*.log  # 这里是容器内路径，对应挂载路径
+
+output.logstash:
+  hosts: ["logstash:5044"]  # 发送到 logstash
+
+# 日志输出（可选）
+logging:
+  to_stdout: true
+  level: info
+  json: true
