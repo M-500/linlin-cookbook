@@ -6,8 +6,25 @@ filebeat.inputs:
     paths:
       - /logs/*.log  # 这里是容器内路径，对应挂载路径
 
-output.logstash:
-  hosts: ["logstash:5044"]  # 发送到 logstash
+#output.logstash:
+#  hosts: ["logstash:5044"]  # 发送到 logstash
+
+# 直接发送给Kafka
+output.kafka:
+  hosts: ["kafka:9092"]
+  topic: "app-logs"               # 发送到这个 topic
+  partition.round_robin:
+    reachable_only: false
+  required_acks: 1
+  compression: gzip
+  max_message_bytes: 1000000
+
+# 可选：以 JSON 结构输出
+processors:
+  - decode_json_fields:
+      fields: ["message"]
+      target: ""
+      overwrite_keys: true
 
 # 日志输出（可选）
 logging:

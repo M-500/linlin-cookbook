@@ -1,21 +1,53 @@
 version: '3.8'
 services:
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.14.0
-    container_name: logstash
-    ports:
-      - "5044:5044"
-    volumes:
-      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:8.14.0
+#    container_name: logstash
+#    ports:
+#      - "5044:5044"
+#    volumes:
+#      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
+#    restart: always
+#
+#  filebeat:
+#    image: docker.elastic.co/beats/filebeat:8.14.0
+#    container_name: filebeat
+#    user: root  # 避免权限问题
+#    volumes:
+#      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+#      - /Users/wulinlin/workspace/feipon.com/backend/logs:/logs  # 挂载宿主机日志目录
+#    depends_on:
+#      - logstash
+#    restart: always
+  kafka:
+    image: 'bitnami/kafka:3.9.0'
+    container_name: 'filebeat-kafka-dev'
     restart: always
-
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    environment:
+      - TZ=Asia/Shanghai
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://10.150.100.115:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    ports:
+      - '9092:9092'
+      - '9094:9094'
+    volumes:
+      - ./kafka_data:/bitnami/kafka/data
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.14.0
     container_name: filebeat
     user: root  # 避免权限问题
     volumes:
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - D:\workspace\zero.com\cms-server\logs:/logs  # 挂载宿主机日志目录
+      - /Users/wulinlin/workspace/feipon.com/backend/logs:/logs  # 挂载宿主机日志目录
     depends_on:
-      - logstash
+      - kafka
     restart: always
