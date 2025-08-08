@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sleep-job
+
+spec:
+  activeDeadlineSeconds: 15 # 设置任务的最大执行时间为15秒
+  backoffLimit: 2 # 任务失败后重试的次数限制为2次
+  completions: 1 # 任务完成的期望数量为1
+  parallelism: 1 # 并行执行的任务数量为1
+
+  template:
+    spec:
+      restartPolicy: OnFailure # 任务失败后重启策略为OnFailure
+      containers:
+      - name: echo-job
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command:
+          - sh
+          - -c
+          - sleep $(($RANDOM % 10 + 1)) && echo done # 随机睡眠1到10秒
