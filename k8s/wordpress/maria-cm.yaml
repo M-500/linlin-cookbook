@@ -1,0 +1,11 @@
+# mariaDB的configmap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-config
+
+data:
+  DATABASE: "db"
+  USER: "wp"
+  PASSWORD: "123"
+  ROOT_PASSWORD: "123"
