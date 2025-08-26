@@ -1,0 +1,54 @@
+version: "3.5"
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:6.0.2
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=wulinlin
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+    volumes:
+      - ./mongodb_data:/data/db
+    networks:
+      - yapi_net
+    # 增加启动参数，--auth，表示连接 mongodb 需要用户名和密码
+    command:
+      - "--auth"
+
+  yapi:
+    image: jayfong/yapi:latest
+    container_name: yapi
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      # 随便设置一个账号（账号是邮箱的格式）
+      - YAPI_ADMIN_ACCOUNT=jobs@yapi.com
+      # 设置账号的密码
+      - YAPI_ADMIN_PASSWORD=jobs666
+      # 禁用注册功能
+      - YAPI_CLOSE_REGISTER=true
+      # 设置连接 mongdb 的服务器地址，可以使用容器内部的 mongodb 服务名称
+      - YAPI_DB_SERVERNAME=mongodb
+      - YAPI_DB_PORT=27017
+      - YAPI_DB_DATABASE=yapidb
+      - YAPI_DB_USER=jobs
+      - YAPI_DB_PASS=123456
+      - YAPI_DB_AUTH_SOURCE=admin
+      #- YAPI_DB_CONNECT_STRING="mongodb://jobs:123456@mongodb:27017/yapidb?authSource=admin"
+      # 禁用发送邮件的功能
+      - YAPI_MAIL_ENABLE=false
+      # 禁用 LDAP 登录功能
+      - YAPI_LDAP_LOGIN_ENABLE=false
+      # 不使用任何插件
+      - YAPI_PLUGINS=[]
+    networks:
+      - yapi_net
+    depends_on:
+      - mongodb
+
+networks:
+  yapi_net:
+    driver: bridge
