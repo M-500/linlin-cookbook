@@ -25,16 +25,16 @@ services:
       - 3000:3000
     environment:
       # 随便设置一个账号（账号是邮箱的格式）
-      - YAPI_ADMIN_ACCOUNT=jobs@yapi.com
+      - YAPI_ADMIN_ACCOUNT=wulinlin@feipon.com
       # 设置账号的密码
-      - YAPI_ADMIN_PASSWORD=jobs666
+      - YAPI_ADMIN_PASSWORD=wulinlin
       # 禁用注册功能
       - YAPI_CLOSE_REGISTER=true
       # 设置连接 mongdb 的服务器地址，可以使用容器内部的 mongodb 服务名称
       - YAPI_DB_SERVERNAME=mongodb
       - YAPI_DB_PORT=27017
       - YAPI_DB_DATABASE=yapidb
-      - YAPI_DB_USER=jobs
+      - YAPI_DB_USER=wulinlin
       - YAPI_DB_PASS=123456
       - YAPI_DB_AUTH_SOURCE=admin
       #- YAPI_DB_CONNECT_STRING="mongodb://jobs:123456@mongodb:27017/yapidb?authSource=admin"
