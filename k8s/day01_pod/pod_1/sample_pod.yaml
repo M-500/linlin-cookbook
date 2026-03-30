@@ -8,7 +8,8 @@ metadata:
 
 spec:
   containers:
-    - image: registry.cn-hangzhou.aliyuncs.com/library/nginx:alpine
+    - image: nginx:alpine
       name: ngx
+      imagePullPolicy: IfNotPresent # 镜像拉取策略，如果本地没有就拉取
       ports:
         - containerPort: 80
