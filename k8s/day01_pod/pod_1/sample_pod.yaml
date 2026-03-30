@@ -8,7 +8,7 @@ metadata:
 
 spec:
   containers:
-    - image: nginx:alpine
+    - image: registry.cn-hangzhou.aliyuncs.com/library/nginx:alpine
       name: ngx
       ports:
         - containerPort: 80
