@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ngx-pod  # Pod的名字
+  labels:
+    env: demo  # 标签，key是env，value是demo
+    owner: chrono  # 标签，key是owner，value是chrono
+
+spec:
+  containers:
+    - image: nginx:alpine
+      name: ngx
+      ports:
+        - containerPort: 80
