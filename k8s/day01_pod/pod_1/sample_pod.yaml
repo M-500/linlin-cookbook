@@ -8,7 +8,7 @@ metadata:
 
 spec:
   containers:
-    - image: nginx:alpine
+    - image: docker.io/library/nginx:alpine
       name: ngx
       imagePullPolicy: IfNotPresent # 镜像拉取策略，如果本地没有就拉取
       ports:
